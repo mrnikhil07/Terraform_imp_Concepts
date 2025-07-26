@@ -1,0 +1,72 @@
+#TERRAFORM WORKSPACES:
+#------------------------------------------------------------------------------------------------------------------------------------#
+
+#workspaces means : where we  write the code and excute operations.
+# it is used to islolate the environment.
+# But in real time all the works we do on workspaces only.
+# if we perform an opeation onone workspace it will not affect the other workspaces
+
+#NOTE:---->
+#1. we can't delete our current workspace.
+#2. we can't delete our workspace without deleting resources.
+#3. we cant't delete default workspace.
+
+#COMMANDS:--->
+#terraform workspace list	        : to list workspaces
+#terraform workspace new dev	    : to create a new workspace	
+#terraform workspace show	        : to show current workspace
+#terraform workspace select prod	: to switch the workspaces
+#terraform workspace delete prod	: to delete the workspaces
+
+
+provider "aws" {
+}
+
+locals {
+env = "${terraform.workspace}"
+}
+
+resource "aws_instance" "one" {
+ami = "ami-id"
+instance_type = "t2.micro"
+tags = {
+Name = "${local.env}-server"
+}
+}
+
+resource "aws_s3_bucket" "two" {
+bucket = "${local.env}-bucketlegin07"
+}
+
+resource "aws_vpc" "three" {
+cidr_block = "10.0.0.0/16"
+tags = {
+Name = "${local.env}-vpc"
+}
+}
+
+resource "aws_subnet" "four" {
+vpc_id = aws_vpc.one.id
+cidr_block = "10.0.0.0/24"
+availability_zone = "ap-south-1a"
+tags = {
+Name = "${local.env}-subnet"
+}
+}
+
+resource "aws_instance" "five" {
+subnet_id = aws_subnet.two.id
+ami = "ami-id"
+instance_type = "t2.micro"
+availability_zone = "ap-south-1a"
+tags = {
+Name = "${local.env}-server"
+}
+}
+
+#TERRAFORM GRAPH command : used to show the flow chart of our infra
+#terraform graph
+#copy paste the content in graphviz online
+
+
+#https://graphviz.org/
