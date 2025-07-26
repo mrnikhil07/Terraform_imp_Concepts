@@ -1,0 +1,30 @@
+#ALIAS AND PROVIDER: used to create resources on mutliple regions in single file.
+#you can use alias to create resources in different regions or accounts.
+# This example shows how to create an AWS instance in two different regions using Terraform.
+
+
+provider "aws" {
+region = "us-east-1"
+}
+
+resource "aws_instance" "one" {
+ami = "ami-id1"
+instance_type = "t2.micro"
+tags = {
+Name = "nvirgina-server"
+}
+}
+
+provider "aws" {
+region = "ap-south-1"
+alias = "mumbai"
+}
+
+resource "aws_instance" "two" {
+provider = aws.mumbai
+ami = "ami_id"
+instance_type = "t2.micro"
+tags = {
+Name = "mumbai-server"
+}
+}
