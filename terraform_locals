@@ -1,0 +1,49 @@
+#TERRAFORM LOCALS:
+#used to define the value once and we can use mutliple times.
+#We can use locals to define value once that are used multiple times.
+
+# we can use multiple values in environment like dev, test, prod etc.
+
+provider "aws" {
+}
+
+locals {
+env = "test"
+}
+
+resource "aws_instance" "one" {
+ami = "ami-03d294e37a4820c21"
+instance_type = "t2.micro"
+tags = {
+Name = "${local.env}-server"
+}
+}
+
+resource "aws_s3_bucket" "two" {
+bucket = "${local.env}-bucketswiggy0011"
+}
+
+resource "aws_iam_role_policy_attachment" "three" {
+  role       = aws_iam_role.test_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"
+  tags = {
+Name = "${local.env}-server"
+}
+}
+
+resource "aws_vpc" "four" {
+cidr_block = "10.0.0.0/16"
+tags = {
+Name = "${local.env}-server"
+}
+}
+
+resource "aws_subnet" "five" {
+  vpc_id            = aws_vpc.five.id
+  cidr_block        = "10.0.1.0/16"
+    availability_zone = "ap-south-1a"
+    tags = {
+Name = "${local.env}-server"
+}
+}
+
