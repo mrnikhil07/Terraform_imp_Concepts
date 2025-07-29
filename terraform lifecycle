@@ -1,0 +1,30 @@
+🔄 Terraform Lifecycle
+The lifecycle block gives fine-grained control over how resources behave. For example:
+
+prevent_destroy: Avoids accidental resource deletion
+
+create_before_destroy: Ensures zero downtime
+
+ignore_changes: Prevents unnecessary changes from triggering updates
+
+🔐 This is helpful for managing critical resources safely.
+
+
+========================================================================================
+
+resource "aws_s3_bucket" "example" {
+  bucket = "my-secure-bucket"
+  acl    = "private"
+
+  lifecycle {
+    prevent_destroy = true
+    ignore_changes = [
+      tags,
+    ]
+  }
+
+  tags = {
+    Name        = "TerraformBucket"
+    Environment = "Dev"
+  }
+}
