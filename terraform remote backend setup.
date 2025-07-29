@@ -1,0 +1,27 @@
+☁️ Terraform Remote Backend
+Using a remote backend like AWS S3 + DynamoDB helps teams collaborate securely. It enables:
+
+Shared, version-controlled state file
+
+State locking with DynamoDB
+
+Safe CI/CD practices in production.
+
+=========================================================================================
+
+Make sure the S3 bucket exist before running terraform init.
+
+ex:
+
+terraform {
+  backend "s3" {
+    bucket         = "my-terraform-state-bucket"                -------------------># Create the bucket Manually.
+    key            = "dev/terraform.tfstate"
+    region         = "us-east-1"
+    dynamodb_table = "terraform-locks"
+    encrypt        = true
+  }
+}
+
+
+
