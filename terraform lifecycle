@@ -1,3 +1,5 @@
+
+
 🔄 Terraform Lifecycle
 The lifecycle block gives fine-grained control over how resources behave. For example:
 
